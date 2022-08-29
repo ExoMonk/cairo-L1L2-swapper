@@ -6,6 +6,8 @@ from starkware.cairo.common.bool import TRUE, FALSE
 from openzeppelin.access.ownable.library import Ownable
 from starkware.starknet.common.syscalls import get_caller_address
 from starkware.starknet.common.messages import send_message_to_l1
+from starkware.cairo.common.uint256 import Uint256
+from starkware.cairo.common.alloc import alloc
 
 #
 # Storage
@@ -61,7 +63,7 @@ namespace L1Interaction:
         assert message_payload[0] = l1_recipient
         assert message_payload[1] = amount.low
         assert message_payload[2] = amount.high
-        send_message_to_l1(to_address=bridge, payload_size=3, payload=message_payload)
+        send_message_to_l1(to_address=l1_address, payload_size=3, payload=message_payload)
         InterractedWithL1.emit(l1_recipient, amount)
         return ()
     end
