@@ -4,6 +4,7 @@ Repository to handle transactions on L1 from StarkNet L2
 ## Installation & Setup
 
 ```
+cd L2
 python -m venv cairo-venv
 source cairo-venv/bin/activate
 
@@ -18,6 +19,10 @@ pip install immutablex-starknet
 
 nile init
 yarn install
+
+
+cd ../
+cd L1
 ```
 
 ## Compiling Contracts
