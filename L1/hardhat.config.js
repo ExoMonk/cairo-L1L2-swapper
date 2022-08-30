@@ -21,7 +21,7 @@ module.exports = {
     },
     goerli: {
       url: process.env.ALCHEMY_URL,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
   },
 };
