@@ -5,6 +5,8 @@
   },
   "dependencies": {
     "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@uniswap/v3-periphery": "^1.4.1",
     "dotenv": "^16.0.1"
   }
 }
