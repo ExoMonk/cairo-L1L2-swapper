@@ -3,7 +3,6 @@ const hre = require("hardhat");
 async function main() {
 
   const [owner, otherAccount] = await hre.ethers.getSigners();
-  console.log(owner.address)
   const l2ContractAddress = "0x0";
   const starknetCore = "0xde29d060D45901Fb19ED6C6e959EB22d8626708e";
   const uniswapRouter = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
