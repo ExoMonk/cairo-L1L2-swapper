@@ -1,10 +1,15 @@
 # cairo-L1L2-interactions
 
 Sample Contracts to handle transactions on L1 from StarkNet L2
+L1L2 #StarkNet repository to automate Swaps on L1 from L2 (e.g swapping directly on Uniswap based on price using 
+@EmpiricNetwork)
+This could be a good stepping stone for creating automated strategy directly from L2 using L1 liquidity(dca, ..)
+
+The L1 Contrat will behave like a Pool Contract where users can deposit tokens and therefore sharing fees while consumming L2 message.
+
+
 Contracts on L2 can interact asynchronously with contracts on L1 via the L2 -> L1 messaging protocol.
-
 How this works ?
-
 
 1. The StarkNet(L2) contract calls the syscall starknet function `send_message_to_l1()`
     - The destination L1 contract to send message
