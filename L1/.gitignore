@@ -8,4 +8,6 @@ typechain-types
 #Hardhat files
 cache
 artifacts
+package-lock.json
+L1/package-lock.json
 

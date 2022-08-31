@@ -1,7 +1,7 @@
 .DS_Store
 .temp/
 node_modules/
-
+L1/package-lock.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
