@@ -13,6 +13,13 @@ enum TokenType {
     USDC
 }
 
+struct DepositValue {
+    uint weth_deposit;
+    uint usdc_deposit;
+    uint dai_deposit;
+    bool hasValue;
+}
+
 
 contract L1Swapper is Ownable {
 
@@ -28,7 +35,13 @@ contract L1Swapper is Ownable {
     //ERC20
     mapping (TokenType => IERC20) availableTokens;
 
-    event receivedAmount(address sender, uint amount);
+
+    //Pool
+    address[] public users;
+    mapping(address => DepositValue) public deposits;
+
+
+    event receivedAmount(address sender, TokenType token_type,  uint amount);
     event swappedToken(TokenType token_from, TokenType token_to, uint amount);
 
     ///////////////////
@@ -61,18 +74,7 @@ contract L1Swapper is Ownable {
         l2_contract = l2_new_contract_;
     }
 
-    function swap_token(TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
-
-        availableTokens[token_from].approve(address(swapRouter), amount+100000);
-
-        //Use swapInterface
-
-
-    }
-
-
     function messageConsumer(TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
-
         uint256[] memory payload = new uint256[](3);
         payload[0] = uint256(token_from);
         payload[1] = uint256(token_to);
@@ -82,5 +84,66 @@ contract L1Swapper is Ownable {
 
         swap_token(token_from, token_to, amount);
         emit swappedToken(token_from, token_to, amount);
+    }
+
+
+    function deposit(TokenType token_type, uint amount) public payable {
+        require(msg.value > 0, 'Deposit must be positive.');
+
+        if(!deposits[msg.sender].hasValue){
+            users.push(msg.sender);
+            deposits[msg.sender].hasValue = true;
+        }
+
+        availableTokens[token_type].transferFrom(msg.sender, address(this), amount);
+        if (token_type == TokenType.WETH){
+            deposits[msg.sender].weth_deposit += msg.value;
+        } else if (token_type == TokenType.USDC){
+            deposits[msg.sender].usdc_deposit += msg.value;
+        } else if (token_type == TokenType.DAI){
+            deposits[msg.sender].dai_deposit += msg.value;
+        }
+        emit receivedAmount(msg.sender, token_type, amount);
+    }
+
+    function withdraw(TokenType token_type, uint amount) public {
+        //@TODO
+        availableTokens[token_type].transfer(msg.sender, amount);
+    }
+
+    function swap_token(TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
+
+        //@TODO check user pool balance
+
+        
+        availableTokens[token_from].approve(address(swapRouter), amount);
+
+        ISwapRouter.ExactInputSingleParams memory parameters =
+            ISwapRouter.ExactInputSingleParams({
+                tokenIn: address(availableTokens[token_from]),
+                tokenOut: address(availableTokens[token_to]),
+                fee: 2500,
+                recipient: address(this),
+                deadline: (block.timestamp + 60*500),
+                amountIn: amount,
+                amountOutMinimum: 0,
+                sqrtPriceLimitX96: 0
+        });
+
+        if (token_from == TokenType.WETH){
+            deposits[msg.sender].weth_deposit -= amount;
+        } else if (token_from == TokenType.USDC){
+            deposits[msg.sender].usdc_deposit -= amount;
+        } else if (token_from == TokenType.DAI){
+            deposits[msg.sender].dai_deposit -= amount;
+        }
+
+        if (token_to == TokenType.WETH){
+            deposits[msg.sender].weth_deposit += swapRouter.exactInputSingle(params);
+        } else if (token_to == TokenType.USDC){
+            deposits[msg.sender].usdc_deposit += swapRouter.exactInputSingle(params);
+        } else if (token_to == TokenType.DAI){
+            deposits[msg.sender].dai_deposit += swapRouter.exactInputSingle(params);
+        }
     }
 }
