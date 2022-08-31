@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.14;
 
 import "./IStarknetCore.sol";
@@ -29,6 +29,10 @@ contract L1Swapper is Ownable {
     IERC20 immutable public weth;
 
     event receivedAmount(address sender, uint amount);
+
+    ///////////////////
+    /// Constructor ///
+    ///////////////////
 
     constructor(
         IStarknetCore starknetCore_,
