@@ -21,7 +21,7 @@ struct DepositValue {
 }
 
 
-contract L1Swapper is Ownable {
+contract L1PoolSwapper is Ownable {
 
     ///////////////
     /// Storage ///
@@ -74,11 +74,13 @@ contract L1Swapper is Ownable {
         l2_contract = l2_new_contract_;
     }
 
-    function messageConsumer(TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
-        uint256[] memory payload = new uint256[](3);
-        payload[0] = uint256(token_from);
-        payload[1] = uint256(token_to);
-        payload[2] = amount;
+    function messageConsumer(address sender, TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
+        uint256 senderAsUint256 = uint256(uint160(sender));
+        uint256[] memory payload = new uint256[](4);
+        payload[0] = senderAsUint256;
+        payload[1] = uint256(token_from);
+        payload[2] = uint256(token_to);
+        payload[3] = amount;
         //Transaction is reverted if payload is false
         starknetCore.consumeMessageFromL2(l2_contract, payload);
 
@@ -106,16 +108,30 @@ contract L1Swapper is Ownable {
         emit receivedAmount(msg.sender, token_type, amount);
     }
 
-    function withdraw(TokenType token_type, uint amount) public {
-        //@TODO
+    function withdraw(TokenType token_type, uint amount) public payable {
+        
+        //Checking user has enough tokens
+        if (token_type == TokenType.WETH){
+            require(deposits[msg.sender].weth_deposit >= amount);
+        } else if (token_type == TokenType.USDC){
+            require(deposits[msg.sender].usdc_deposit >= amount);
+        } else if (token_type == TokenType.DAI){
+            require(deposits[msg.sender].dai_deposit >= amount);
+        }
         availableTokens[token_type].transfer(msg.sender, amount);
     }
 
-    function swap_token(TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
+    function swap_token(TokenType token_from, TokenType token_to, uint amount) public {
 
-        //@TODO check user pool balance
+        //Check that user has enough balance to swap
+        if (token_from == TokenType.WETH){
+            require(deposits[msg.sender].weth_deposit >= amount);
+        } else if (token_from == TokenType.USDC){
+            require(deposits[msg.sender].usdc_deposit >= amount);
+        } else if (token_from == TokenType.DAI){
+            require(deposits[msg.sender].dai_deposit >= amount);
+        }
 
-        
         availableTokens[token_from].approve(address(swapRouter), amount);
 
         ISwapRouter.ExactInputSingleParams memory parameters =
@@ -139,11 +155,12 @@ contract L1Swapper is Ownable {
         }
 
         if (token_to == TokenType.WETH){
-            deposits[msg.sender].weth_deposit += swapRouter.exactInputSingle(params);
+            deposits[msg.sender].weth_deposit += swapRouter.exactInputSingle(parameters);
         } else if (token_to == TokenType.USDC){
-            deposits[msg.sender].usdc_deposit += swapRouter.exactInputSingle(params);
+            deposits[msg.sender].usdc_deposit += swapRouter.exactInputSingle(parameters);
         } else if (token_to == TokenType.DAI){
-            deposits[msg.sender].dai_deposit += swapRouter.exactInputSingle(params);
+            deposits[msg.sender].dai_deposit += swapRouter.exactInputSingle(parameters);
         }
     }
+
 }
