@@ -1,46 +1,22 @@
 {
     "abi": [
         {
-            "members": [
-                {
-                    "name": "low",
-                    "offset": 0,
-                    "type": "felt"
-                },
-                {
-                    "name": "high",
-                    "offset": 1,
-                    "type": "felt"
-                }
-            ],
-            "name": "Uint256",
-            "size": 2,
-            "type": "struct"
-        },
-        {
-            "data": [
-                {
-                    "name": "previousOwner",
-                    "type": "felt"
-                },
-                {
-                    "name": "newOwner",
-                    "type": "felt"
-                }
-            ],
-            "keys": [],
-            "name": "OwnershipTransferred",
-            "type": "event"
-        },
-        {
             "data": [
                 {
                     "name": "l1_recipient",
                     "type": "felt"
                 },
                 {
+                    "name": "token_from",
+                    "type": "felt"
+                },
+                {
+                    "name": "token_to",
+                    "type": "felt"
+                },
+                {
                     "name": "amount",
-                    "type": "Uint256"
+                    "type": "felt"
                 }
             ],
             "keys": [],
@@ -511,32 +487,28 @@
                 "destination": "starkware.cairo.common.memcpy.memcpy",
                 "type": "alias"
             },
-            "__main__.L1Interaction": {
+            "__main__.L1PoolSwapperInteraction": {
                 "type": "namespace"
             },
-            "__main__.L1Interaction.Args": {
-                "full_name": "__main__.L1Interaction.Args",
+            "__main__.L1PoolSwapperInteraction.Args": {
+                "full_name": "__main__.L1PoolSwapperInteraction.Args",
                 "members": {},
                 "size": 0,
                 "type": "struct"
             },
-            "__main__.L1Interaction.ImplicitArgs": {
-                "full_name": "__main__.L1Interaction.ImplicitArgs",
+            "__main__.L1PoolSwapperInteraction.ImplicitArgs": {
+                "full_name": "__main__.L1PoolSwapperInteraction.ImplicitArgs",
                 "members": {},
                 "size": 0,
                 "type": "struct"
             },
-            "__main__.L1Interaction.Return": {
+            "__main__.L1PoolSwapperInteraction.Return": {
                 "cairo_type": "()",
                 "type": "type_definition"
             },
-            "__main__.L1Interaction.SIZEOF_LOCALS": {
+            "__main__.L1PoolSwapperInteraction.SIZEOF_LOCALS": {
                 "type": "const",
                 "value": 0
-            },
-            "__main__.Ownable": {
-                "destination": "openzeppelin.access.ownable.library.Ownable",
-                "type": "alias"
             },
             "__main__.TRUE": {
                 "destination": "starkware.cairo.common.bool.TRUE",
@@ -622,123 +594,6 @@
             },
             "__main__.send_message_to_l1": {
                 "destination": "starkware.starknet.common.messages.send_message_to_l1",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.HashBuiltin": {
-                "destination": "starkware.cairo.common.cairo_builtins.HashBuiltin",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.Ownable": {
-                "type": "namespace"
-            },
-            "openzeppelin.access.ownable.library.Ownable.Args": {
-                "full_name": "openzeppelin.access.ownable.library.Ownable.Args",
-                "members": {},
-                "size": 0,
-                "type": "struct"
-            },
-            "openzeppelin.access.ownable.library.Ownable.ImplicitArgs": {
-                "full_name": "openzeppelin.access.ownable.library.Ownable.ImplicitArgs",
-                "members": {},
-                "size": 0,
-                "type": "struct"
-            },
-            "openzeppelin.access.ownable.library.Ownable.Return": {
-                "cairo_type": "()",
-                "type": "type_definition"
-            },
-            "openzeppelin.access.ownable.library.Ownable.SIZEOF_LOCALS": {
-                "type": "const",
-                "value": 0
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner": {
-                "type": "namespace"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.Args": {
-                "full_name": "openzeppelin.access.ownable.library.Ownable_owner.Args",
-                "members": {},
-                "size": 0,
-                "type": "struct"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.HashBuiltin": {
-                "destination": "starkware.cairo.common.cairo_builtins.HashBuiltin",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.ImplicitArgs": {
-                "full_name": "openzeppelin.access.ownable.library.Ownable_owner.ImplicitArgs",
-                "members": {},
-                "size": 0,
-                "type": "struct"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.Return": {
-                "cairo_type": "()",
-                "type": "type_definition"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.SIZEOF_LOCALS": {
-                "type": "const",
-                "value": 0
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.hash2": {
-                "destination": "starkware.cairo.common.hash.hash2",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.normalize_address": {
-                "destination": "starkware.starknet.common.storage.normalize_address",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.storage_read": {
-                "destination": "starkware.starknet.common.syscalls.storage_read",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.Ownable_owner.storage_write": {
-                "destination": "starkware.starknet.common.syscalls.storage_write",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred": {
-                "type": "namespace"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.Args": {
-                "full_name": "openzeppelin.access.ownable.library.OwnershipTransferred.Args",
-                "members": {},
-                "size": 0,
-                "type": "struct"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.ImplicitArgs": {
-                "full_name": "openzeppelin.access.ownable.library.OwnershipTransferred.ImplicitArgs",
-                "members": {},
-                "size": 0,
-                "type": "struct"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.Return": {
-                "cairo_type": "()",
-                "type": "type_definition"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.SELECTOR": {
-                "type": "const",
-                "value": 553132481214675521502977957974509639062080100631756862105218886163371506175
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.SIZEOF_LOCALS": {
-                "type": "const",
-                "value": 0
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.alloc": {
-                "destination": "starkware.cairo.common.alloc.alloc",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.emit_event": {
-                "destination": "starkware.starknet.common.syscalls.emit_event",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.OwnershipTransferred.memcpy": {
-                "destination": "starkware.cairo.common.memcpy.memcpy",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.assert_not_zero": {
-                "destination": "starkware.cairo.common.math.assert_not_zero",
-                "type": "alias"
-            },
-            "openzeppelin.access.ownable.library.get_caller_address": {
-                "destination": "starkware.starknet.common.syscalls.get_caller_address",
                 "type": "alias"
             },
             "starkware.cairo.common.alloc.alloc": {

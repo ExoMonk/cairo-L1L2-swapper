@@ -1,25 +1,97 @@
 [
     {
-        "inputs": [
+        "data": [
+            {
+                "name": "l1_recipient",
+                "type": "felt"
+            },
+            {
+                "name": "token_from",
+                "type": "felt"
+            },
+            {
+                "name": "token_to",
+                "type": "felt"
+            },
             {
                 "name": "amount",
                 "type": "felt"
             }
         ],
-        "name": "increase_balance",
+        "keys": [],
+        "name": "InterractedWithL1",
+        "type": "event"
+    },
+    {
+        "data": [
+            {
+                "name": "previousOwner",
+                "type": "felt"
+            },
+            {
+                "name": "newOwner",
+                "type": "felt"
+            }
+        ],
+        "keys": [],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "name": "owner",
+                "type": "felt"
+            },
+            {
+                "name": "l1_address",
+                "type": "felt"
+            }
+        ],
+        "name": "constructor",
         "outputs": [],
-        "type": "function"
+        "type": "constructor"
     },
     {
         "inputs": [],
-        "name": "get_balance",
+        "name": "get_l1_contract",
         "outputs": [
             {
-                "name": "res",
+                "name": "l1_address",
                 "type": "felt"
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "token_from",
+                "type": "felt"
+            },
+            {
+                "name": "token_to",
+                "type": "felt"
+            },
+            {
+                "name": "amount",
+                "type": "felt"
+            }
+        ],
+        "name": "swap_token_message",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "new_l1_address",
+                "type": "felt"
+            }
+        ],
+        "name": "update_l1_contrat",
+        "outputs": [],
         "type": "function"
     }
 ]

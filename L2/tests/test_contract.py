@@ -7,25 +7,18 @@ from starkware.starknet.testing.starknet import Starknet
 # The path to the contract source code.
 CONTRACT_FILE = os.path.join("contracts", "contract.cairo")
 
+OWNER = 0x07445Bd422e6B9C9cDF04E73a4Cf36Ea7C011A737795D13c9342593e789A6a33
+L1_CONTRACT_ADDRESS = 0x0
 
-# The testing library uses python's asyncio. So the following
-# decorator and the ``async`` keyword are needed.
 @pytest.mark.asyncio
-async def test_increase_balance():
+async def test_deploy():
     """Test increase_balance method."""
-    # Create a new Starknet class that simulates the StarkNet
-    # system.
     starknet = await Starknet.empty()
 
     # Deploy the contract.
-    contract = await starknet.deploy(
+    deployed_contract = await starknet.deploy(
         source=CONTRACT_FILE,
+        constructor_calldata=[OWNER, L1_CONTRACT_ADDRESS]
     )
-
-    # Invoke increase_balance() twice.
-    await contract.increase_balance(amount=10).invoke()
-    await contract.increase_balance(amount=20).invoke()
-
-    # Check the result of get_balance().
-    execution_info = await contract.get_balance().call()
-    assert execution_info.result == (30,)
+    l1_contract = await deployed_contract.get_l1_contract().call()
+    assert l1_contract.result.l1_address == 0
