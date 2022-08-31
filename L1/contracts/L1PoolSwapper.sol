@@ -9,14 +9,14 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 
 enum TokenType {
     WETH,
-    DAI,
+    UNI,
     USDC
 }
 
 struct DepositValue {
     uint weth_deposit;
     uint usdc_deposit;
-    uint dai_deposit;
+    uint uni_deposit;
     bool hasValue;
 }
 
@@ -54,7 +54,7 @@ contract L1PoolSwapper is Ownable {
         uint256 l2_contract_,
         IERC20 weth_,
         IERC20 usdc_, 
-        IERC20 dai_
+        IERC20 uni_
     ) payable {
         require(address(starknetCore_) != address(0));
         swapRouter = swapRouter_;
@@ -63,7 +63,7 @@ contract L1PoolSwapper is Ownable {
 
         availableTokens[TokenType.WETH] = weth_;
         availableTokens[TokenType.USDC] = usdc_;
-        availableTokens[TokenType.DAI] = dai_;
+        availableTokens[TokenType.UNI] = uni_;
     }
 
     ////////////////////////
@@ -102,8 +102,8 @@ contract L1PoolSwapper is Ownable {
             deposits[msg.sender].weth_deposit += msg.value;
         } else if (token_type == TokenType.USDC){
             deposits[msg.sender].usdc_deposit += msg.value;
-        } else if (token_type == TokenType.DAI){
-            deposits[msg.sender].dai_deposit += msg.value;
+        } else if (token_type == TokenType.UNI){
+            deposits[msg.sender].uni_deposit += msg.value;
         }
         emit receivedAmount(msg.sender, token_type, amount);
     }
@@ -115,8 +115,8 @@ contract L1PoolSwapper is Ownable {
             require(deposits[msg.sender].weth_deposit >= amount);
         } else if (token_type == TokenType.USDC){
             require(deposits[msg.sender].usdc_deposit >= amount);
-        } else if (token_type == TokenType.DAI){
-            require(deposits[msg.sender].dai_deposit >= amount);
+        } else if (token_type == TokenType.UNI){
+            require(deposits[msg.sender].uni_deposit >= amount);
         }
         availableTokens[token_type].transfer(msg.sender, amount);
     }
@@ -128,8 +128,8 @@ contract L1PoolSwapper is Ownable {
             require(deposits[msg.sender].weth_deposit >= amount);
         } else if (token_from == TokenType.USDC){
             require(deposits[msg.sender].usdc_deposit >= amount);
-        } else if (token_from == TokenType.DAI){
-            require(deposits[msg.sender].dai_deposit >= amount);
+        } else if (token_from == TokenType.UNI){
+            require(deposits[msg.sender].uni_deposit >= amount);
         }
 
         availableTokens[token_from].approve(address(swapRouter), amount);
@@ -150,16 +150,16 @@ contract L1PoolSwapper is Ownable {
             deposits[msg.sender].weth_deposit -= amount;
         } else if (token_from == TokenType.USDC){
             deposits[msg.sender].usdc_deposit -= amount;
-        } else if (token_from == TokenType.DAI){
-            deposits[msg.sender].dai_deposit -= amount;
+        } else if (token_from == TokenType.UNI){
+            deposits[msg.sender].uni_deposit -= amount;
         }
 
         if (token_to == TokenType.WETH){
             deposits[msg.sender].weth_deposit += swapRouter.exactInputSingle(parameters);
         } else if (token_to == TokenType.USDC){
             deposits[msg.sender].usdc_deposit += swapRouter.exactInputSingle(parameters);
-        } else if (token_to == TokenType.DAI){
-            deposits[msg.sender].dai_deposit += swapRouter.exactInputSingle(parameters);
+        } else if (token_to == TokenType.UNI){
+            deposits[msg.sender].uni_deposit += swapRouter.exactInputSingle(parameters);
         }
     }
 
