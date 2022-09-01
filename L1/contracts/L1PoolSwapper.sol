@@ -87,10 +87,9 @@ contract L1PoolSwapper is Ownable {
         l2_contract = l2_new_contract_;
     }
 
-    function messageConsumer(address sender, TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
-        uint256 senderAsUint256 = uint256(uint160(sender));
+    function messageConsumer(uint256 sender, TokenType token_from, TokenType token_to, uint amount) public onlyOwner {
         uint256[] memory payload = new uint256[](4);
-        payload[0] = senderAsUint256;
+        payload[0] = sender;
         payload[1] = uint256(token_from);
         payload[2] = uint256(token_to);
         payload[3] = amount;

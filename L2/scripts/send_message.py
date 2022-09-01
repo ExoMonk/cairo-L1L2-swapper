@@ -12,7 +12,7 @@ load_dotenv()
 CONTRACT_FILE = ['contracts/contract.cairo']
 
 OWNER = 0x07445Bd422e6B9C9cDF04E73a4Cf36Ea7C011A737795D13c9342593e789A6a33
-L2_CONTRACT = os.environt.get('L2_CONTRACT')
+L2_CONTRACT = int(os.environ.get('L2_CONTRACT'), 16)
 
 with open('./artifacts/abis/contract.json', 'r') as f:
     ABI = json.load(f)
@@ -21,8 +21,8 @@ async def send_message():
     client = GatewayClient(TESTNET)
     print("⏳ Retrieving Deployed Contract from Account...")
     acc_client = AccountClient(OWNER, client, key_pair=KeyPair(
-        os.environt.get('PRIVATE_KEY'),
-        os.environt.get('PUBLIC_KEY')
+        int(os.environ.get('PRIVATE_KEY')),
+        int(os.environ.get('PUBLIC_KEY'))
     ))
     contract = await Contract.from_address(client=acc_client, address=L2_CONTRACT)
     print("⏳ Sending Message to L1...")

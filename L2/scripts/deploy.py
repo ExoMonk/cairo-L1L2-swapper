@@ -9,7 +9,7 @@ load_dotenv()
 CONTRACT_FILE = ['contracts/contract.cairo']
 
 OWNER = 0x07445Bd422e6B9C9cDF04E73a4Cf36Ea7C011A737795D13c9342593e789A6a33
-L1_CONTRACT_ADDRESS = os.environt.get('L1_CONTRACT')
+L1_CONTRACT_ADDRESS = int(os.environ.get('L1_CONTRACT'), 16)
 
 async def deploy():
     client = GatewayClient(TESTNET)
