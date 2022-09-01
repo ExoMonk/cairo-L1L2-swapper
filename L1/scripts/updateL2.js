@@ -8,7 +8,7 @@ async function main() {
     let l2ContractAddress = await L1PoolSwapperContract.l2_contract()
     console.log(`✨ Initialized L2 Address : ${l2ContractAddress}`)
     console.log('⏳ Updating L2 Address..')
-    const updateL2Address = await L1PoolSwapperContract.updateL2Contract("0x99999");
+    const updateL2Address = await L1PoolSwapperContract.updateL2Contract(process.env.DEPLOYED_GOERLI_L2_CONTRACT_ADDRESS);
     await updateL2Address.wait()
     l2ContractAddress = await L1PoolSwapperContract.l2_contract()
     console.log(`✨ Initialized L2 Address : ${l2ContractAddress}`)
