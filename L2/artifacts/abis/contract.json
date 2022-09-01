@@ -67,6 +67,10 @@
     {
         "inputs": [
             {
+                "name": "l1_caller",
+                "type": "felt"
+            },
+            {
                 "name": "token_from",
                 "type": "felt"
             },

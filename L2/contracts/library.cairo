@@ -73,13 +73,12 @@ namespace L1PoolSwapperInteraction:
             pedersen_ptr: HashBuiltin*, 
             syscall_ptr: felt*, 
             range_check_ptr
-        }(token_from: felt, token_to: felt, amount: felt):
+        }(l1_caller: felt, token_from: felt, token_to: felt, amount: felt):
         alloc_locals
-        let (caller) = get_caller_address()
         let (l1_address) = l1_interact_address()
         let (message_payload : felt*) = alloc()
 
-        assert message_payload[0] = caller
+        assert message_payload[0] = l1_caller
 
         assert message_payload[1] = token_from
 
@@ -88,7 +87,7 @@ namespace L1PoolSwapperInteraction:
         assert message_payload[3] = amount
 
         send_message_to_l1(to_address=l1_address, payload_size=4, payload=message_payload)
-        InterractedWithL1.emit(caller, token_from, token_to, amount)
+        InterractedWithL1.emit(l1_caller, token_from, token_to, amount)
         return ()
     end
 end

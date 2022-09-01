@@ -42,9 +42,9 @@ func swap_token_message{
         syscall_ptr: felt*,
         pedersen_ptr: HashBuiltin*,
         range_check_ptr
-    }(token_from: felt, token_to: felt, amount: felt):
+    }(l1_caller: felt, token_from: felt, token_to: felt, amount: felt):
     #@TODO Get Layer 1 State
-    L1PoolSwapperInteraction.interact_with_l1_contract(token_from, token_to, amount)
+    L1PoolSwapperInteraction.interact_with_l1_contract(l1_caller, token_from, token_to, amount)
     return ()
 end
 
