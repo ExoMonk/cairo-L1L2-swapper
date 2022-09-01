@@ -67,6 +67,19 @@ contract L1PoolSwapper is Ownable {
     }
 
     ////////////////////////
+    ///     Getters      ///
+    ////////////////////////
+    function getBalance(TokenType token_type) public view returns(uint value) {
+        if (token_type == TokenType.WETH){
+            value = deposits[msg.sender].weth_deposit;
+        } else if (token_type == TokenType.USDC){
+            value = deposits[msg.sender].usdc_deposit;
+        } else if (token_type == TokenType.UNI){
+            value = deposits[msg.sender].uni_deposit;
+        }
+    }
+
+    ////////////////////////
     /// Public Functions ///
     ////////////////////////
 

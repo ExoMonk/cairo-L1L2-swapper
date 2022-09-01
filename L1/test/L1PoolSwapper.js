@@ -5,113 +5,57 @@ const {
 const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
 
-describe("Lock", function () {
-  async function deployOneYearLockFixture() {
+describe("L1PoolSwapper", function () {
+  async function deployL1PoolSwapperFixture() {
 
     const [owner, otherAccount] = await ethers.getSigners();
+    const L1PoolSwapper = await ethers.getContractFactory("L1PoolSwapper");
+    const l2ContractAddress = "0x0";
+    const starknetCore = "0xde29d060D45901Fb19ED6C6e959EB22d8626708e";
+    const uniswapRouter = "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45";
+    const usdcAddress = "0x07865c6e87b9f70255377e024ace6630c1eaa37f";
+    const wethAddress = "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6";
+    const uniAddress = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984";
+    const pool_swapper = await L1PoolSwapper.connect(owner).deploy(
+      starknetCore, 
+      uniswapRouter, 
+      l2ContractAddress, 
+      wethAddress,
+      usdcAddress, 
+      uniAddress
+    )
 
-    const Lock = await ethers.getContractFactory("L1PoolSwapper");
-    const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-    return { lock, unlockTime, lockedAmount, owner, otherAccount };
+    return { pool_swapper, l2ContractAddress, owner, otherAccount };
   }
 
   describe("Deployment", function () {
-    it("Should set the right unlockTime", async function () {
-      const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
+    it("Should set the right contract address", async function () {
+      const { pool_swapper, l2ContractAddress } = await loadFixture(deployL1PoolSwapperFixture);
 
-      expect(await lock.unlockTime()).to.equal(unlockTime);
+      expect(await pool_swapper.l2_contract()).to.equal(l2ContractAddress);
     });
 
     it("Should set the right owner", async function () {
-      const { lock, owner } = await loadFixture(deployOneYearLockFixture);
+      const { pool_swapper, owner } = await loadFixture(deployL1PoolSwapperFixture);
 
-      expect(await lock.owner()).to.equal(owner.address);
+      expect(await pool_swapper.owner()).to.equal(owner.address);
     });
 
-    it("Should receive and store the funds to lock", async function () {
-      const { lock, lockedAmount } = await loadFixture(
-        deployOneYearLockFixture
-      );
-
-      expect(await ethers.provider.getBalance(lock.address)).to.equal(
-        lockedAmount
-      );
-    });
-
-    it("Should fail if the unlockTime is not in the future", async function () {
-      // We don't use the fixture here because we want a different deployment
-      const latestTime = await time.latest();
-      const Lock = await ethers.getContractFactory("Lock");
-      await expect(Lock.deploy(latestTime, { value: 1 })).to.be.revertedWith(
-        "Unlock time should be in the future"
+    it("Should have no balance", async function () {
+      const { pool_swapper } = await loadFixture(deployL1PoolSwapperFixture);
+      expect(await ethers.provider.getBalance(pool_swapper.address)).to.equal(
+        0
       );
     });
   });
 
-  describe("Withdrawals", function () {
-    describe("Validations", function () {
-      it("Should revert with the right error if called too soon", async function () {
-        const { lock } = await loadFixture(deployOneYearLockFixture);
-
-        await expect(lock.withdraw()).to.be.revertedWith(
-          "You can't withdraw yet"
-        );
-      });
-
-      it("Should revert with the right error if called from another account", async function () {
-        const { lock, unlockTime, otherAccount } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        // We can increase the time in Hardhat Network
-        await time.increaseTo(unlockTime);
-
-        // We use lock.connect() to send a transaction from another account
-        await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
-          "You aren't the owner"
-        );
-      });
-
-      it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
-        const { lock, unlockTime } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        // Transactions are sent using the first signer by default
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw()).not.to.be.reverted;
-      });
-    });
-
-    describe("Events", function () {
-      it("Should emit an event on withdrawals", async function () {
-        const { lock, unlockTime, lockedAmount } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw())
-          .to.emit(lock, "Withdrawal")
-          .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
-      });
-    });
-
-    describe("Transfers", function () {
-      it("Should transfer the funds to the owner", async function () {
-        const { lock, unlockTime, lockedAmount, owner } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw()).to.changeEtherBalances(
-          [owner, lock],
-          [lockedAmount, -lockedAmount]
-        );
-      });
+  describe("Features", function () {
+    it("Should have balance after deposit", async function () {
+      const { pool_swapper, owner } = await loadFixture(deployL1PoolSwapperFixture);
+      expect(await pool_swapper.connect(owner).getBalance(0)).to.equal(0);
+      console.log("OK")
+      await pool_swapper.connect(owner).deposit(0, 1, { value: ethers.utils.parseEther("0.5") })
+      expect(await pool_swapper.connect(owner).getBalance(0)).to.equal(100);
     });
   });
 });
