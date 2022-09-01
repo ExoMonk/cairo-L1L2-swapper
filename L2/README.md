@@ -14,7 +14,7 @@ pip install --upgrade pip
 pip install cairo-lang
 pip install cairo-nile 
 pip install openzeppelin-cairo-contracts
-pip install immutablex-starknet
+pip install python-dotenv
 
 nile init
 yarn install
