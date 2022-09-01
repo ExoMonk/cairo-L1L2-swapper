@@ -134,7 +134,7 @@ contract L1PoolSwapper is Ownable {
         availableTokens[token_type].transfer(msg.sender, amount);
     }
 
-    function swap_token(TokenType token_from, TokenType token_to, uint amount) public {
+    function swap_token(TokenType token_from, TokenType token_to, uint amount) private {
 
         //Check that user has enough balance to swap
         if (token_from == TokenType.WETH){
