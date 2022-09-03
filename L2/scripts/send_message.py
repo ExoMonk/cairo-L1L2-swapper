@@ -29,7 +29,7 @@ async def send_message():
     contract = await Contract.from_address(client=acc_client, address=L2_CONTRACT)
     print("⏳ Sending Message to L1...")
     invocation = await contract.functions["swap_token_message"].invoke(
-        l1_caller=L1_CALLER, token_from=0, token_to=1, amount=100, max_fee=int(1e16)
+        l1_caller=L1_CALLER, token_from=1, token_to=0, amount=100, max_fee=int(1e16)
     )
     await invocation.wait_for_acceptance()
     print(f'✨ Message sent to relayer on L1 !')

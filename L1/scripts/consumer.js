@@ -12,6 +12,7 @@ async function main() {
     console.log(`✨ Current $WETH User Balance in Pool : ${ethUserBalance}`)
     console.log(`⏳ Consuming L2 Message and automate Swap...`)
     const consumer = await L1PoolSwapperContract.messageConsumer(1, 0, 100)
+    await consumer.wait()
     ethUserBalance = await L1PoolSwapperContract.getBalance(0)
     uniUserBalance = await L1PoolSwapperContract.getBalance(1)
     console.log(`✨ Current $UNI User Balance in Pool : ${uniUserBalance}`)

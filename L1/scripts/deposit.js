@@ -12,14 +12,14 @@ async function main() {
     const uni = new ethers.Contract(uniAddress, abi, owner);
 
     let userBalance = await L1PoolSwapperContract.getBalance(1)
-    console.log(`✨ Current User Balance in Pool : ${userBalance}`)
+    console.log(`✨ Current User $UNI Balance in Pool : ${userBalance}`)
     console.log('⏳ Approving $UNI...')
-    let approval = await (await uni.connect(owner).approve(L1PoolSwapperContract.address, 100)).wait();
+    let approval = await (await uni.connect(owner).approve(L1PoolSwapperContract.address, 200)).wait();
     console.log('⏳ Deposit $UNI in Contract...')
-    const deposit = await L1PoolSwapperContract.deposit(1, 100, { value: ethers.utils.parseEther("0.001") });
+    const deposit = await L1PoolSwapperContract.deposit(1, 200, { value: ethers.utils.parseEther("0.002") });
     await deposit.wait()
     userBalance = await L1PoolSwapperContract.getBalance(1)
-    console.log(`✨ Updated User Balance in Pool : ${userBalance}`)
+    console.log(`✨ Updated User $UNI Balance in Pool : ${userBalance}`)
 }
 
 main().catch((error) => {
